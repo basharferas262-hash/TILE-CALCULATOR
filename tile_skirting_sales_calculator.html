@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة البلاط والسكرتنج والكراتين | Tile & Skirting Calculator</title>
+    <style>
+        :root {
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50:  #f8fafc;
+            --sky-600:   #0284c7;
+            --sky-500:   #0ea5e9;
+            --sky-100:   #e0f2fe;
+            --sky-50:    #f0f9ff;
+            --emerald-600: #059669;
+            --emerald-500: #10b981;
+            --amber-500: #f59e0b;
+            --amber-100: #fef3c7;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--slate-100);
+            color: var(--slate-800);
+            min-height: 100vh;
+            padding-bottom: 40px;
+            transition: direction 0.3s ease;
+        }
+
+        /* Navbar Header */
+        header {
+            background-color: var(--slate-900);
+            color: #ffffff;
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-subtitle {
+            font-size: 0.75rem;
+            color: var(--slate-300);
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-header {
+            background: var(--slate-800);
+            color: var(--sky-500);
+            border: 1px solid var(--slate-700);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-header:hover {
+            background: var(--slate-700);
+            color: #ffffff;
+        }
+
+        /* App Container */
+        .main-container {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        /* Tabs Navigation */
+        .tabs-container {
+            display: flex;
+            background-color: #ffffff;
+            padding: 6px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--slate-200);
+            margin-bottom: 24px;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 14px 16px;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--slate-600);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background-color: var(--sky-600);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
+        }
+
+        /* Layout Grid */
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .calculator-grid {
+                grid-template-columns: 7fr 5fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            border: 1px solid var(--slate-200);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge-info {
+            font-size: 0.75rem;
+            background: var(--sky-50);
+            color: var(--sky-600);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--sky-100);
+            font-weight: 600;
+        }
+
+        /* Preset Buttons Grid */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .preset-btn {
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            padding: 10px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--slate-700);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .preset-btn:hover, .preset-btn.active {
+            background: var(--sky-50);
+            border-color: var(--sky-600);
+            color: var(--sky-600);
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+        }
+
+        /* Inputs & Controls */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--slate-700);
+            margin-bottom: 6px;
+        }
+
+        .form-sublabel {
+            font-size: 0.75rem;
+            color: var(--slate-500);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .input-control, .select-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--slate-300);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--slate-900);
+            background-color: #ffffff;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-control:focus, .select-control:focus {
+            border-color: var(--sky-600);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .counter-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .counter-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--slate-100);
+            border: 1px solid var(--slate-300);
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--slate-700);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .counter-btn.minus {
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        html[dir="ltr"] .counter-btn.minus {
+            border-radius: var(--radius-md) 0 0 var(--radius-md);
+        }
+
+        .counter-btn.plus {
+            border-radius: var(--radius-md) 0 0 var(--radius-md);
+        }
+
+        html[dir="ltr"] .counter-btn.plus {
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .counter-input {
+            width: 100%;
+            height: 44px;
+            border-y: 1px solid var(--slate-300);
+            border-x: none;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+
+        /* Results Display Card */
+        .results-card {
+            background-color: var(--slate-900);
+            color: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+        }
+
+        .results-header {
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-bottom: 1px solid var(--slate-800);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .primary-result-box {
+            background: linear-gradient(135deg, var(--sky-600), #0369a1);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            text-align: center;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+
+        .primary-result-label {
+            font-size: 0.8rem;
+            color: var(--sky-100);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .primary-result-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffffff;
+        }
+
+        .primary-result-unit {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--sky-100);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .result-tile {
+            background-color: var(--slate-800);
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--slate-700);
+        }
+
+        .result-tile-label {
+            font-size: 0.72rem;
+            color: var(--slate-400);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .result-tile-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .text-emerald { color: var(--emerald-500) !important; }
+        .text-amber { color: var(--amber-500) !important; }
+
+        /* Summary Text Area */
+        .summary-card {
+            background-color: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .summary-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-content {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--slate-700);
+            white-space: pre-line;
+        }
+
+        .copy-btn {
+            background: #ffffff;
+            border: 1px solid var(--slate-300);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--sky-600);
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background: var(--sky-50);
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header>
+        <div class="header-container">
+            <div>
+                <div class="brand-title" id="app-title">📦 حاسبة البلاط والسكرتنج والكراتين</div>
+                <div class="brand-subtitle" id="app-subtitle">نظام المبيعات المطور لتسكير الكراتين وحساب الكميات الصريحة</div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-header" onclick="toggleLanguage()" id="lang-btn">English</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        
+        <!-- Tab Navigation (Standard Tile vs Skirting) -->
+        <div class="tabs-container">
+            <button class="tab-btn active" id="tab-tiles" onclick="switchMode('tiles')">
+                🏢 حاسبة البلاط والأرضيات
+            </button>
+            <button class="tab-btn" id="tab-skirting" onclick="switchMode('skirting')">
+                📐 حاسبة السكرتنج (النعلات)
+            </button>
+        </div>
+
+        <div class="calculator-grid">
+            
+            <!-- Left Column: Inputs Form -->
+            <div class="inputs-column">
+                
+                <!-- 1. Tile Size Selection Card -->
+                <div class="card">
+                    <div class="card-title">
+                        <span id="txt-sec1-title">1. قياس البلاطة الأصلية (سم)</span>
+                        <span class="badge-info" id="badgeTileArea">المساحة: 0.36 م²</span>
+                    </div>
+
+                    <!-- Preset Tiles Grid -->
+                    <div class="preset-grid" id="presetButtons">
+                        <button class="preset-btn active" onclick="selectPreset(60, 60, this)">60 × 60</button>
+                        <button class="preset-btn" onclick="selectPreset(60, 120, this)">60 × 120</button>
+                        <button class="preset-btn" onclick="selectPreset(20, 120, this)">20 × 120</button>
+                        <button class="preset-btn" onclick="selectPreset(100, 100, this)">100 × 100</button>
+                        <button class="preset-btn" onclick="selectPreset(30, 60, this)">30 × 60</button>
+                        <button class="preset-btn" onclick="selectPreset(30, 30, this)">30 × 30</button>
+                        <button class="preset-btn" onclick="selectPreset(40, 40, this)">40 × 40</button>
+                        <button class="preset-btn" onclick="selectPreset(45, 45, this)">45 × 45</button>
+                    </div>
+
+                    <!-- Custom Size Toggle -->
+                    <div style="margin-top: 10px;">
+                        <button type="button" onclick="toggleCustomSize()" style="background:none; border:none; color:var(--sky-600); font-size:0.8rem; font-weight:700; cursor:pointer;" id="txt-custom-toggle">
+                            + مقاس مخصص آخر؟
+                        </button>
+                        <div id="customInputs" class="flex-row hidden" style="margin-top: 8px;">
+                            <input type="number" id="customWidth" placeholder="العرض (سم)" oninput="calculate()" class="input-control">
+                            <input type="number" id="customLength" placeholder="الطول (سم)" oninput="calculate()" class="input-control">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Box Details Card -->
+                <div class="card">
+                    <div class="card-title" id="txt-sec2-title">2. تفاصيل الكرتونة الواحدة</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" id="txt-box-pcs-lbl">عدد الحبات داخل الكرتونة الواحدة:</label>
+                        <div class="counter-group">
+                            <button class="counter-btn minus" onclick="adjustPcs(-1)">-</button>
+                            <input type="number" id="pcsPerBox" value="4" min="1" oninput="calculate()" class="counter-input">
+                            <button class="counter-btn plus" onclick="adjustPcs(1)">+</button>
+                        </div>
+                    </div>
+
+                    <div style="background-color: var(--sky-50); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--sky-100); font-size: 0.8rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span id="txt-box-area-lbl">مساحة الكرتونة الواحدة:</span>
+                            <span id="lblBoxArea" style="font-weight: 800; color: var(--slate-900);">1.44 م²</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Dynamic Mode Inputs (Standard Tile vs Skirting Specifics) -->
+                <div class="card">
+                    <div class="card-title" id="txt-sec3-title">3. متطلبات الطلبية</div>
+
+                    <!-- Skirting Specific Options (Visible only in Skirting Mode) -->
+                    <div id="skirtingFields" class="hidden">
+                        <div class="form-group">
+                            <label class="form-label" id="txt-skirt-h-lbl">ارتفاع قطعة السكرتنج / النعلة (سم):</label>
+                            <input type="number" id="skirtingHeight" value="10" min="1" step="0.5" oninput="calculate()" class="input-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" id="txt-cut-dir-lbl">اتجاه القص من البلاطة:</label>
+                            <select id="cutDirection" onchange="calculate()" class="select-control">
+                                <option value="length" id="opt-cut-len">حسب الضلع الأطول (الأكثر شيوعاً)</option>
+                                <option value="width" id="opt-cut-wid">حسب الضلع القصير</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" id="txt-input-mode-lbl">طريقة إدخال طلب السكرتنج:</label>
+                            <select id="skirtingInputMode" onchange="calculate()" class="select-control">
+                                <option value="lm" id="opt-mode-lm">بالمتر الطولي المطلوب</option>
+                                <option value="pcs" id="opt-mode-pcs">بعدد قطع السكرتنج المطلوبة</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Required Quantity Input -->
+                    <div class="form-group">
+                        <label class="form-label" id="txt-req-qty-lbl">المساحة المطلوب تغطيتها من الزبون (م²):</label>
+                        <input type="number" id="reqQty" value="120.2" step="any" min="0" oninput="calculate()" class="input-control" style="font-size: 1.2rem;">
+                    </div>
+
+                    <!-- Optional Price Input -->
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" id="txt-price-lbl">سعر المتر المربع (اختياري لحساب الفاتورة):</label>
+                        <input type="number" id="pricePerM2" placeholder="0.00" step="any" oninput="calculate()" class="input-control">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Calculation KPI Results -->
+            <div class="results-column">
+                
+                <div class="results-card">
+                    <div class="results-header">
+                        <span id="txt-res-title">النتيجة والتسكير الفعلي</span>
+                        <span style="font-size: 0.7rem; background: rgba(16,185,129,0.2); color: var(--emerald-500); padding: 4px 8px; border-radius: 12px; font-weight:700;" id="txt-ready-badge">جاهز للبائع</span>
+                    </div>
+
+                    <!-- Primary KPI Result Box -->
+                    <div class="primary-result-box">
+                        <div class="primary-result-label" id="txt-primary-kpi-lbl">عدد الكراتين المغلقة الواجب بيعها:</div>
+                        <div>
+                            <span class="primary-result-value" id="resPrimaryValue">84</span>
+                            <span class="primary-result-unit" id="resPrimaryUnit">كرتونة</span>
+                        </div>
+                    </div>
+
+                    <!-- KPI Grid -->
+                    <div class="results-grid">
+                        <div class="result-tile">
+                            <span class="result-tile-label" id="txt-actual-m2-lbl">المساحة الفعلية المبيعة</span>
+                            <span class="result-tile-value text-emerald" id="resActualM2">120.96 م²</span>
+                        </div>
+
+                        <div class="result-tile" id="kpiTileExtra">
+                            <span class="result-tile-label" id="txt-extra-m2-lbl">الزيادة للتسكير</span>
+                            <span class="result-tile-value text-amber" id="resExtraM2">+0.76 م²</span>
+                        </div>
+
+                        <!-- Skirting Specific KPIs -->
+                        <div class="result-tile hidden" id="kpiSkirtStrips">
+                            <span class="result-tile-label" id="txt-strips-tile-lbl">قطع السكرتنج/بلاطة</span>
+                            <span class="result-tile-value" id="resStripsPerTile">6 قطع</span>
+                        </div>
+
+                        <div class="result-tile hidden" id="kpiSkirtLm">
+                            <span class="result-tile-label" id="txt-actual-lm-lbl">المتر الطولي الناتج</span>
+                            <span class="result-tile-value text-emerald" id="resActualLm">0.00 م.ط</span>
+                        </div>
+
+                        <div class="result-tile">
+                            <span class="result-tile-label" id="txt-total-pcs-lbl">إجمالي عدد الحبات</span>
+                            <span class="result-tile-value" id="resTotalTiles">336 حبة</span>
+                        </div>
+
+                        <div class="result-tile">
+                            <span class="result-tile-label" id="txt-box-coverage-lbl">مساحة الكرتونة</span>
+                            <span class="result-tile-value" id="resBoxCoverage">1.44 م²</span>
+                        </div>
+                    </div>
+
+                    <!-- Total Invoice Price (If inputted) -->
+                    <div id="priceResultBox" class="hidden" style="background-color: var(--slate-800); border: 1px solid var(--amber-500); padding: 12px; border-radius: var(--radius-md); margin-top: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.8rem; color: var(--amber-500); font-weight: bold;" id="txt-total-bill-lbl">إجمالي سعر الفاتورة:</span>
+                            <span style="font-size: 1.3rem; font-weight: 900; color: var(--amber-500);" id="resTotalPrice">0.00</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Summary Text for Customer -->
+                <div class="summary-card">
+                    <div class="summary-title">
+                        <span id="txt-summary-title">نص ملخص الطلب للعميل:</span>
+                        <button class="copy-btn" onclick="copySummary()" id="btnCopyText">نسخ النص</button>
+                    </div>
+                    <div class="summary-content" id="summaryContent">
+                        <!-- Dynamic Text Generated by JS -->
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Embedded Application Logic -->
+    <script>
+        // State Management
+        let currentLang = 'ar';
+        let currentMode = 'tiles'; // 'tiles' or 'skirting'
+        let selectedWidth = 60;
+        let selectedLength = 60;
+        let isCustomSize = false;
+
+        // Translations Object
+        const i18n = {
+            ar: {
+                appTitle: "📦 حاسبة البلاط والسكرتنج والكراتين",
+                appSubtitle: "نظام المبيعات المطور لتسكير الكراتين وحساب الكميات الصريحة",
+                tabTiles: "🏢 حاسبة البلاط والأرضيات",
+                tabSkirting: "📐 حاسبة السكرتنج (النعلات)",
+                sec1Title: "1. قياس البلاطة الأصلية (سم)",
+                sec2Title: "2. تفاصيل الكرتونة الواحدة",
+                sec3Title: "3. متطلبات الطلبية",
+                tileAreaBadge: "المساحة",
+                customToggle: "+ مقاس مخصص آخر؟",
+                customToggleCancel: "إلغاء المقاس المخصص",
+                boxPcsLbl: "عدد الحبات داخل الكرتونة الواحدة:",
+                boxAreaLbl: "مساحة الكرتونة الواحدة:",
+                skirtHLbl: "ارتفاع قطعة السكرتنج / النعلة (سم):",
+                cutDirLbl: "اتجاه القص من البلاطة:",
+                optCutLen: "حسب الضلع الأطول (الأكثر شيوعاً)",
+                optCutWid: "حسب الضلع القصير",
+                inputModeLbl: "طريقة إدخال طلب السكرتنج:",
+                optModeLm: "بالمتر الطولي المطلوب",
+                optModePcs: "بعدد قطع السكرتنج المطلوبة",
+                reqQtyLblTiles: "المساحة المطلوب تغطيتها من الزبون (م²):",
+                reqQtyLblSkirtLm: "المتر الطولي المطلوب من الزبون (م.ط):",
+                reqQtyLblSkirtPcs: "عدد قطع السكرتنج المطلوبة من الزبون:",
+                priceLbl: "سعر المتر المربع (اختياري لحساب الفاتورة):",
+                resTitle: "النتيجة والتسكير الفعلي",
+                readyBadge: "جاهز للبائع",
+                primaryKpiTiles: "عدد الكراتين المغلقة الواجب بيعها:",
+                primaryKpiSkirting: "الكراتين المطلوبة لتأمين السكرتنج:",
+                unitBoxes: "كرتونة",
+                actualM2Lbl: "المساحة الفعلية المبيعة",
+                extraM2Lbl: "الزيادة للتسكير",
+                stripsTileLbl: "قطع السكرتنج/بلاطة",
+                actualLmLbl: "المتر الطولي الناتج",
+                totalPcsLbl: "إجمالي عدد الحبات",
+                boxCoverageLbl: "مساحة الكرتونة",
+                totalBillLbl: "إجمالي سعر الفاتورة:",
+                summaryTitle: "نص ملخص الطلب للعميل:",
+                btnCopy: "نسخ النص",
+                btnCopied: "تم النسخ!",
+                m2Unit: "م²",
+                lmUnit: "م.ط",
+                pcsUnit: "حبة",
+                stripsUnit: "قطع"
+            },
+            en: {
+                appTitle: "📦 Tile & Skirting Sales Calculator",
+                appSubtitle: "Advanced sales tool for box roundups & linear meter calculations",
+                tabTiles: "🏢 Tile Floor Calculator",
+                tabSkirting: "📐 Skirting / Baseboard Calculator",
+                sec1Title: "1. Original Tile Size (cm)",
+                sec2Title: "2. Single Box Specification",
+                sec3Title: "3. Order Requirements",
+                tileAreaBadge: "Area",
+                customToggle: "+ Custom Tile Size?",
+                customToggleCancel: "Cancel Custom Size",
+                boxPcsLbl: "Tile pieces per box:",
+                boxAreaLbl: "Single box coverage:",
+                skirtHLbl: "Skirting Height (cm):",
+                cutDirLbl: "Cutting direction:",
+                optCutLen: "Along longest edge (Standard)",
+                optCutWid: "Along short edge",
+                inputModeLbl: "Skirting Input Mode:",
+                optModeLm: "By Required Linear Meters",
+                optModePcs: "By Required Piece Count",
+                reqQtyLblTiles: "Required Customer Area (m²):",
+                reqQtyLblSkirtLm: "Required Linear Meters (LM):",
+                reqQtyLblSkirtPcs: "Required Skirting Pieces:",
+                priceLbl: "Price per m² (Optional for invoice):",
+                resTitle: "Sales & Box Roundup Results",
+                readyBadge: "Ready for Customer",
+                primaryKpiTiles: "Full Sealed Boxes to Sell:",
+                primaryKpiSkirting: "Full Tile Boxes Needed for Skirting:",
+                unitBoxes: "Full Boxes",
+                actualM2Lbl: "Actual m² Sold",
+                extraM2Lbl: "Extra m² (Roundup)",
+                stripsTileLbl: "Skirting Pcs/Tile",
+                actualLmLbl: "Delivered Linear Meters",
+                totalPcsLbl: "Total Tile Pieces",
+                boxCoverageLbl: "Box Coverage",
+                totalBillLbl: "Total Invoice Amount:",
+                summaryTitle: "Customer Order Summary:",
+                btnCopy: "Copy Summary",
+                btnCopied: "Copied!",
+                m2Unit: "m²",
+                lmUnit: "LM",
+                pcsUnit: "pcs",
+                stripsUnit: "pcs"
+            }
+        };
+
+        window.onload = function() {
+            calculate();
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            document.getElementById('lang-btn').innerText = currentLang === 'ar' ? 'English' : 'العربية';
+            
+            updateTexts();
+            calculate();
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('tab-tiles').classList.toggle('active', mode === 'tiles');
+            document.getElementById('tab-skirting').classList.toggle('active', mode === 'skirting');
+
+            const skirtingFields = document.getElementById('skirtingFields');
+            const kpiTileExtra = document.getElementById('kpiTileExtra');
+            const kpiSkirtStrips = document.getElementById('kpiSkirtStrips');
+            const kpiSkirtLm = document.getElementById('kpiSkirtLm');
+
+            if (mode === 'skirting') {
+                skirtingFields.classList.remove('hidden');
+                kpiTileExtra.classList.add('hidden');
+                kpiSkirtStrips.classList.remove('hidden');
+                kpiSkirtLm.classList.remove('hidden');
+                document.getElementById('reqQty').value = '50';
+            } else {
+                skirtingFields.classList.add('hidden');
+                kpiTileExtra.classList.remove('hidden');
+                kpiSkirtStrips.classList.add('hidden');
+                kpiSkirtLm.classList.add('hidden');
+                document.getElementById('reqQty').value = '120.2';
+            }
+
+            updateTexts();
+            calculate();
+        }
+
+        function updateTexts() {
+            const t = i18n[currentLang];
+            document.getElementById('app-title').innerText = t.appTitle;
+            document.getElementById('app-subtitle').innerText = t.appSubtitle;
+            document.getElementById('tab-tiles').innerText = t.tabTiles;
+            document.getElementById('tab-skirting').innerText = t.tabSkirting;
+            document.getElementById('txt-sec1-title').innerText = t.sec1Title;
+            document.getElementById('txt-sec2-title').innerText = t.sec2Title;
+            document.getElementById('txt-sec3-title').innerText = t.sec3Title;
+            document.getElementById('txt-box-pcs-lbl').innerText = t.boxPcsLbl;
+            document.getElementById('txt-box-area-lbl').innerText = t.boxAreaLbl;
+            document.getElementById('txt-skirt-h-lbl').innerText = t.skirtHLbl;
+            document.getElementById('txt-cut-dir-lbl').innerText = t.cutDirLbl;
+            document.getElementById('opt-cut-len').innerText = t.optCutLen;
+            document.getElementById('opt-cut-wid').innerText = t.optCutWid;
+            document.getElementById('txt-input-mode-lbl').innerText = t.inputModeLbl;
+            document.getElementById('opt-mode-lm').innerText = t.optModeLm;
+            document.getElementById('opt-mode-pcs').innerText = t.optModePcs;
+            document.getElementById('txt-price-lbl').innerText = t.priceLbl;
+            document.getElementById('txt-res-title').innerText = t.resTitle;
+            document.getElementById('txt-ready-badge').innerText = t.readyBadge;
+            document.getElementById('resPrimaryUnit').innerText = t.unitBoxes;
+            document.getElementById('txt-actual-m2-lbl').innerText = t.actualM2Lbl;
+            document.getElementById('txt-extra-m2-lbl').innerText = t.extraM2Lbl;
+            document.getElementById('txt-strips-tile-lbl').innerText = t.stripsTileLbl;
+            document.getElementById('txt-actual-lm-lbl').innerText = t.actualLmLbl;
+            document.getElementById('txt-total-pcs-lbl').innerText = t.totalPcsLbl;
+            document.getElementById('txt-box-coverage-lbl').innerText = t.boxCoverageLbl;
+            document.getElementById('txt-total-bill-lbl').innerText = t.totalBillLbl;
+            document.getElementById('txt-summary-title').innerText = t.summaryTitle;
+            document.getElementById('btnCopyText').innerText = t.btnCopy;
+
+            // Dynamic Request Quantity Label
+            const reqLabel = document.getElementById('txt-req-qty-lbl');
+            if (currentMode === 'tiles') {
+                reqLabel.innerText = t.reqQtyLblTiles;
+                document.getElementById('txt-primary-kpi-lbl').innerText = t.primaryKpiTiles;
+            } else {
+                const skirtMode = document.getElementById('skirtingInputMode').value;
+                reqLabel.innerText = (skirtMode === 'lm') ? t.reqQtyLblSkirtLm : t.reqQtyLblSkirtPcs;
+                document.getElementById('txt-primary-kpi-lbl').innerText = t.primaryKpiSkirting;
+            }
+
+            const toggleBtn = document.getElementById('txt-custom-toggle');
+            toggleBtn.innerText = isCustomSize ? t.customToggleCancel : t.customToggle;
+        }
+
+        function selectPreset(w, l, btn) {
+            isCustomSize = false;
+            selectedWidth = w;
+            selectedLength = l;
+
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            document.getElementById('customInputs').classList.add('hidden');
+            document.getElementById('txt-custom-toggle').innerText = i18n[currentLang].customToggle;
+
+            calculate();
+        }
+
+        function toggleCustomSize() {
+            isCustomSize = !isCustomSize;
+            const customDiv = document.getElementById('customInputs');
+            const toggleBtn = document.getElementById('txt-custom-toggle');
+            const t = i18n[currentLang];
+
+            if (isCustomSize) {
+                customDiv.classList.remove('hidden');
+                toggleBtn.innerText = t.customToggleCancel;
+                document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            } else {
+                customDiv.classList.add('hidden');
+                toggleBtn.innerText = t.customToggle;
+                selectPreset(60, 60, document.querySelectorAll('.preset-btn')[0]);
+            }
+            calculate();
+        }
+
+        function adjustPcs(val) {
+            const input = document.getElementById('pcsPerBox');
+            let current = parseInt(input.value) || 1;
+            current += val;
+            if (current < 1) current = 1;
+            input.value = current;
+            calculate();
+        }
+
+        function calculate() {
+            const t = i18n[currentLang];
+
+            // 1. Get Tile Dimensions
+            let w = selectedWidth;
+            let l = selectedLength;
+
+            if (isCustomSize) {
+                const cw = parseFloat(document.getElementById('customWidth').value);
+                const cl = parseFloat(document.getElementById('customLength').value);
+                if (cw > 0 && cl > 0) {
+                    w = cw;
+                    l = cl;
+                }
+            }
+
+            // Tile & Box Area
+            const tileAreaM2 = (w / 100) * (l / 100);
+            document.getElementById('badgeTileArea').innerText = `${t.tileAreaBadge}: ${tileAreaM2.toFixed(4)} ${t.m2Unit}`;
+
+            const pcsPerBox = parseInt(document.getElementById('pcsPerBox').value) || 1;
+            const boxAreaM2 = tileAreaM2 * pcsPerBox;
+            document.getElementById('lblBoxArea').innerText = `${boxAreaM2.toFixed(3)} ${t.m2Unit}`;
+            document.getElementById('resBoxCoverage').innerText = `${boxAreaM2.toFixed(2)} ${t.m2Unit}`;
+
+            const reqQty = parseFloat(document.getElementById('reqQty').value) || 0;
+            const unitPrice = parseFloat(document.getElementById('pricePerM2').value) || 0;
+
+            let boxCount = 0;
+            let actualM2 = 0;
+            let extraM2 = 0;
+            let totalTiles = 0;
+            let summaryText = "";
+
+            if (currentMode === 'tiles') {
+                // STANDARD TILE CALCULATIONS
+                boxCount = Math.ceil(reqQty / boxAreaM2);
+                if (isNaN(boxCount) || boxCount < 0) boxCount = 0;
+
+                actualM2 = boxCount * boxAreaM2;
+                extraM2 = actualM2 - reqQty;
+                if (extraM2 < 0) extraM2 = 0;
+                totalTiles = boxCount * pcsPerBox;
+
+                document.getElementById('resPrimaryValue').innerText = boxCount;
+                document.getElementById('resActualM2').innerText = `${actualM2.toFixed(2)} ${t.m2Unit}`;
+                document.getElementById('resExtraM2').innerText = `+${extraM2.toFixed(2)} ${t.m2Unit}`;
+                document.getElementById('resTotalTiles').innerText = `${totalTiles} ${t.pcsUnit}`;
+
+                if (currentLang === 'ar') {
+                    summaryText = `تفاصيل الطلبية لمساحة (${reqQty} م²) لمقاس بلاط (${w}×${l} سم):\n`;
+                    summaryText += `• عدد الكراتين المطلوبة للتسكير: (${boxCount} كرتونة كاملة).\n`;
+                    summaryText += `• تحتوي على: (${totalTiles} حبة بلاط) بقعة كرتونة فيها ${pcsPerBox} حبات.\n`;
+                    summaryText += `• المساحة الفعلية المبيعة: (${actualM2.toFixed(2)} م²) بزيادة قدرها (${extraM2.toFixed(2)} م²) لإغلاق الكرتونة.`;
+                } else {
+                    summaryText = `Order Details for Area (${reqQty} m²) Tile Size (${w}x${l} cm):\n`;
+                    summaryText += `• Full Sealed Boxes Needed: (${boxCount} full boxes).\n`;
+                    summaryText += `• Total Tiles: (${totalTiles} pcs) - ${pcsPerBox} pcs/box.\n`;
+                    summaryText += `• Actual Area Sold: (${actualM2.toFixed(2)} m²) with (+${extraM2.toFixed(2)} m²) extra to close the box.`;
+                }
+
+            } else {
+                // SKIRTING CALCULATIONS
+                const skirtH = parseFloat(document.getElementById('skirtingHeight').value) || 10;
+                const cutDir = document.getElementById('cutDirection').value;
+                const skirtInputMode = document.getElementById('skirtingInputMode').value;
+
+                let pieceLenCm = (cutDir === 'length') ? Math.max(w, l) : Math.min(w, l);
+                let sideToCutCm = (cutDir === 'length') ? Math.min(w, l) : Math.max(w, l);
+
+                let stripsPerTile = Math.floor(sideToCutCm / skirtH);
+                if (stripsPerTile < 1) stripsPerTile = 1;
+
+                let pieceLenM = pieceLenCm / 100;
+
+                let neededPcs = (skirtInputMode === 'lm') ? Math.ceil(reqQty / pieceLenM) : Math.ceil(reqQty);
+                let neededTiles = Math.ceil(neededPcs / stripsPerTile);
+
+                boxCount = Math.ceil(neededTiles / pcsPerBox);
+                if (isNaN(boxCount) || boxCount < 0) boxCount = 0;
+
+                let actualTiles = boxCount * pcsPerBox;
+                let actualSkirtingPcs = actualTiles * stripsPerTile;
+                let actualLm = actualSkirtingPcs * pieceLenM;
+                actualM2 = actualTiles * tileAreaM2;
+
+                document.getElementById('resPrimaryValue').innerText = boxCount;
+                document.getElementById('resStripsPerTile').innerText = `${stripsPerTile} ${t.stripsUnit}`;
+                document.getElementById('resActualLm').innerText = `${actualLm.toFixed(2)} ${t.lmUnit}`;
+                document.getElementById('resActualM2').innerText = `${actualM2.toFixed(2)} ${t.m2Unit}`;
+                document.getElementById('resTotalTiles').innerText = `${actualTiles} ${t.pcsUnit}`;
+
+                if (currentLang === 'ar') {
+                    summaryText = `تفاصيل طلبية السكرتنج (${reqQty} ${skirtInputMode === 'lm' ? 'متر طولي' : 'قطعة'}) من بلاطة (${w}×${l} سم):\n`;
+                    summaryText += `• تقص البلاطة الواحدة: (${stripsPerTile} قطع سكرتنج) بارتفاع ${skirtH} سم.\n`;
+                    summaryText += `• لتسكير الكراتين: يلزم بيع (${boxCount} كرتونة كاملة) = (${actualTiles} بلاطة كاملة).\n`;
+                    summaryText += `• النتيجة الصريحة: تعطي (${actualM2.toFixed(2)} م²) وينتج عنها (${actualSkirtingPcs} قطعة سكرتنج) بطول صافي ينفذ (${actualLm.toFixed(2)} متر طولي).`;
+                } else {
+                    summaryText = `Skirting Order Details (${reqQty} ${skirtInputMode === 'lm' ? 'LM' : 'pcs'}) from Tile (${w}x${l} cm):\n`;
+                    summaryText += `• Each tile produces: (${stripsPerTile} skirting pieces) at ${skirtH} cm height.\n`;
+                    summaryText += `• Sealed Box Roundup: Sell (${boxCount} full boxes) = (${actualTiles} full tiles).\n`;
+                    summaryText += `• Actual Delivered: (${actualM2.toFixed(2)} m²) yielding (${actualSkirtingPcs} skirting pcs) covering (${actualLm.toFixed(2)} Linear Meters).`;
+                }
+            }
+
+            // Price calculation
+            const priceBox = document.getElementById('priceResultBox');
+            if (unitPrice > 0) {
+                const totalPrice = actualM2 * unitPrice;
+                priceBox.classList.remove('hidden');
+                document.getElementById('resTotalPrice').innerText = totalPrice.toFixed(2);
+                if (currentLang === 'ar') {
+                    summaryText += `\n• إجمالي سعر الفاتورة: (${totalPrice.toFixed(2)}) بسعر ${unitPrice} للمتر المربع.`;
+                } else {
+                    summaryText += `\n• Total Invoice Bill: (${totalPrice.toFixed(2)}) @ ${unitPrice}/m².`;
+                }
+            } else {
+                priceBox.classList.add('hidden');
+            }
+
+            document.getElementById('summaryContent').innerText = summaryText;
+        }
+
+        function copySummary() {
+            const rawText = document.getElementById('summaryContent').innerText;
+            const btn = document.getElementById('btnCopyText');
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(rawText);
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = rawText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            }
+
+            btn.innerText = i18n[currentLang].btnCopied;
+            setTimeout(() => {
+                btn.innerText = i18n[currentLang].btnCopy;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
